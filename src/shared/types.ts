@@ -28,6 +28,10 @@ export type Pokemon = {
     height: string;
     weight: string;
     name: string;
+    base_experience: number;
+    cries:{
+        latest: string
+    };
     stats: Stat[];
     types: Type[];
     abilities: Ability[]

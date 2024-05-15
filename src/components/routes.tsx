@@ -1,14 +1,14 @@
 import {
   Outlet,
   RouterProvider,
-  createBrowserRouter,
+  createHashRouter,
 } from "react-router-dom";
-import App from "../App";
+import App from "../pages/Home";
 import { getPokeInfo, getPokeList} from "../shared/api";
-import { PokemonPage } from "../pokemon-page";
+import { PokemonPage } from "../pages/info";
 
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <Outlet />,
@@ -21,7 +21,6 @@ const router = createBrowserRouter([
       {
         path: ':id',
         loader: async (params) => {
-          console.log(params);
           let pokeData = await getPokeInfo(params.params.id)
           return pokeData
         },
