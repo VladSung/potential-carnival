@@ -9,7 +9,7 @@ export const NavigationBottom = ({ children, ...props }: PaperProps & PropsWithC
 
     return (
         <Paper mx='md' mah={80} pos='sticky' withBorder style={{ zIndex: 3, bottom: 8, left: 24, right: 24 }} {...props}>
-            <Group p='md'>
+            <Group p='md' wrap='nowrap'>
                 {children}
                 <Menu>
                     <Menu.Target>
