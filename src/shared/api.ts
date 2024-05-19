@@ -1,12 +1,35 @@
-import { Pokemon } from "./types";
+import { Pokemon } from "../entity/poke";
+import { useEffect, useState } from 'react';
 
 export const PokeImageUrl = "https://img.pokemondb.net/artwork/";
 
 export const baseUrl = 'https://pokeapi.co/api/v2/'
 
-export const getPokeInfo: (name?: string) => Promise<Pokemon | undefined> = async (name) => {
-    const info = await (await fetch(baseUrl +'pokemon/'+ name)).json()
-    return info as unknown as Pokemon
+export const usePokeInfo = (name: string) => {
+    const [pokeInfo, setPokeInfo] = useState<Pokemon | undefined | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+
+    useEffect(() => {
+        if(!pokeInfo){
+            setLoading(true)
+            getPokeInfo(name).then((data)=>{
+                setLoading(false)
+                setPokeInfo(data)
+            })
+        }
+    }, [pokeInfo?.name])
+
+    if(name === '') return {data: null, loading};
+    return {data: pokeInfo, loading}
+}
+export const getPokeInfo: (name?: string) => Promise<Pokemon | undefined | null> = async (name) => {
+    try{
+        const info = await (await fetch(baseUrl +'pokemon/'+ name))?.json()
+        return info as unknown as Pokemon
+    }catch(err){
+        console.log(err)
+        return null
+    }
 }
 
 export const getPokeList: () => Promise<{results: {id:number,name:string, url:string}[]}> = async () => {
