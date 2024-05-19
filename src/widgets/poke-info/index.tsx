@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { AbilityInfo } from "./ability"
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { TypeInfo } from "./poke-type";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { CriesAudio } from "./cries-audio";
@@ -20,7 +20,6 @@ import { NavigationBottom } from "../../entity/navigation-bottom";
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
 import { NotFound } from "../../shared/not-found";
 import { usePokeInfo } from "../../shared/api";
-import { PokeAnimationContext } from "../../shared/contexts/animation-disabled-context";
 
 ChartJS.register(
     RadialLinearScale,
@@ -32,14 +31,12 @@ ChartJS.register(
 );
 
 export const PokemonInfo = () => {
-    const { animationDisabled } = useContext(PokeAnimationContext)
     const params = useParams()
 
     const TRANSITION_DURATION = 200;
 
     const [embla, setEmbla] = useState<Embla | null>(null);
     const [opened, setOpen] = useState('')
-    const [videoEnded, setVideoEnded] = useState<boolean>(false)
 
     useAnimationOffsetEffect(embla, TRANSITION_DURATION);
     const { data: poke, loading } = usePokeInfo(params.id || '')
@@ -64,10 +61,6 @@ export const PokemonInfo = () => {
     };
 
     return (<AppShellMain>
-        {!(animationDisabled || videoEnded) && <Paper bg='#000' style={{ position: 'fixed', width: '100%', zIndex: 2, top: 0, bottom: 0, left: 0, right: 0 }}>
-            <video onEnded={() => setVideoEnded(true)} style={{ position: 'absolute', width: '100%', objectFit: 'cover', top: '50%', transform: 'translateY(-50%)' }}
-                autoPlay muted src='/potential-carnival/preview.webm' />
-        </Paper>}
         {!loading && (
             <>
                 <Box h='100dvh' style={{
