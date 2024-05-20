@@ -1,4 +1,3 @@
-import { memo, useState } from 'react'
 import { AppShellMain, Container, Input, SimpleGrid } from '@mantine/core'
 import { useLoaderData } from 'react-router-dom'
 import { IconSearch } from '@tabler/icons-react'
@@ -6,11 +5,12 @@ import { IconSearch } from '@tabler/icons-react'
 import { PokeCard, PokeList } from '../entity/poke'
 import './styles.css'
 import { NavigationBottom } from '../entity/navigation-bottom'
-import { useDebouncedValue } from '@mantine/hooks'
+import { useDebouncedState } from '@mantine/hooks'
 
 function PokemonListPage() {
   const pokemons = useLoaderData() as PokeList;
-  const [nameFilter, setNameFilter] = useState('')
+  const [nameFilter, setNameFilter] = useDebouncedState('', 700)
+
 
   return (
     <AppShellMain>
@@ -24,8 +24,8 @@ function PokemonListPage() {
   )
 }
 
-const List = memo(({ pokemons, nameFilter }: { pokemons: PokeList, nameFilter: string }) => {
-  const [filteredPokemons] = useDebouncedValue((nameFilter ? pokemons?.filter((p => p.name.toLowerCase().includes(nameFilter))) : pokemons), 500)
+const List = (({ pokemons, nameFilter }: { pokemons: PokeList, nameFilter: string }) => {
+  const filteredPokemons = ((nameFilter ? pokemons?.filter((p => p.name.toLowerCase().includes(nameFilter))) : pokemons))
 
   return (
     <SimpleGrid cols={{ base: 2, xs: 4, sm: 6 }}>
