@@ -12,13 +12,17 @@ function PokemonListPage() {
   const [nameFilter, setNameFilter] = useDebouncedState('', 700)
 
 
+
+
   return (
     <AppShellMain>
       <Container pb='xl' mih='calc(100dvh - 80px - 60px)'>
         <List pokemons={pokemons} nameFilter={nameFilter.length > 3 ? nameFilter : ''} />
       </Container>
       <NavigationBottom>
-        <Input variant='filled' placeholder='Enter more than 3 characters' onChange={(e) => (setNameFilter(e.currentTarget.value.toLowerCase()))} onKeyDown={(e) => { e.key === 'Enter' && setNameFilter(e.currentTarget.value.toLowerCase()) }} onBlur={(e) => setNameFilter(e.currentTarget.value.toLowerCase())} style={{ flexGrow: 1 }} leftSection={<IconSearch size={14} />} />
+        <Input variant='filled' placeholder='Enter more than 3 characters'
+          onChange={(e) => (setNameFilter(e.currentTarget.value.toLowerCase()))}
+          style={{ flexGrow: 1 }} leftSection={<IconSearch size={14} />} />
       </NavigationBottom>
     </AppShellMain>
   )

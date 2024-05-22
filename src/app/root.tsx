@@ -2,7 +2,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { PokeAnimationContext } from "../shared/contexts/animation-disabled-context";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
-import { Paper } from "@mantine/core";
+import { Modal } from "@mantine/core";
 
 export const Root = () => {
     const [animationDisabled, setAnimationDisabled] = useLocalStorage({
@@ -10,14 +10,33 @@ export const Root = () => {
         defaultValue: false
     });
     const [videoEnded, setVideoEnded] = useState<boolean>(false)
+
+    const handleVideoEnded = () => {
+        setVideoEnded(true)
+    }
+
+
     return (
         <PokeAnimationContext.Provider value={{ animationDisabled, setAnimationDisabled }}>
-            {!(animationDisabled || videoEnded) && <Paper radius={0} bg='#000' style={{ position: 'fixed', width: '100%', zIndex: 99999, top: 0, bottom: 0, left: 0, right: 0 }}>
-                <video onEnded={() => setVideoEnded(true)} style={{ position: 'absolute', zIndex: 1, width: '100%', objectFit: 'cover', top: '50%', transform: 'translateY(-50%)' }}
+            {!(animationDisabled || videoEnded) && <Modal
+                fullScreen opened={!videoEnded && !animationDisabled}
+                onClose={handleVideoEnded} radius={0} bg='#000'
+                styles={{
+                    root: { zIndex: 9 },
+                    body: {
+                        display: 'flex',
+                        alignItems: 'center',
+                        height: 'calc(100% - 60px)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }
+                }}
+            >
+                <video onError={handleVideoEnded} onEnded={handleVideoEnded} style={{ maxWidth: '100%', zIndex: 1, width: '100%', objectFit: 'cover' }}
                     autoPlay muted src='/potential-carnival/preview.webm' />
-                <video onEnded={() => setVideoEnded(true)} style={{ position: 'absolute', zIndex: 0, width: '105%', height: '105%', objectFit: 'fill', top: '50%', transform: 'translateY(-50%)', filter: 'blur(256px)' }}
+                <video onEnded={handleVideoEnded} style={{ position: 'absolute', zIndex: 0, width: '105%', height: '105%', objectFit: 'fill', top: '50%', transform: 'translateY(-50%)', filter: 'blur(256px)' }}
                     autoPlay muted src='/potential-carnival/preview.webm' />
-            </Paper>}
+            </Modal>}
             <Outlet />
         </PokeAnimationContext.Provider>
     )

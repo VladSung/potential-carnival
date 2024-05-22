@@ -2,12 +2,15 @@ import {
   RouterProvider,
   createHashRouter,
 } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { Flex, Loader } from "@mantine/core";
+
 import { getPokeList } from "../shared/api";
-import PokemonInfoPage from "../pages/info";
-import PokemonListPage from "../pages";
 import { NotFound } from "../shared/not-found";
 import { Root } from "./root";
+import PokemonListPage from "../pages";
 
+const PokemonInfoPage = lazy(() => import('../pages/info'));
 
 const router = createHashRouter([
   {
@@ -17,11 +20,13 @@ const router = createHashRouter([
       {
         path: "/",
         loader: async () => (await getPokeList()).results,
-        element: <PokemonListPage />,
+        element: <PokemonListPage />
       },
       {
         path: ':id',
-        element: <PokemonInfoPage />,
+        element: <Suspense fallback={<Flex justify='center' align='center'><Loader /></Flex>}>
+          <PokemonInfoPage />
+        </Suspense>,
       },
       {
         path: '*',
